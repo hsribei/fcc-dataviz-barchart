@@ -1,4 +1,4 @@
-# Taken from https://raw.githubusercontent.com/github/gitignore/e68f3c0984f96ab262db7871f23a818ca0c097e2/Node.gitignore
+# Taken from https://raw.githubusercontent.com/github/gitignore/e68f3c0984f96ab262db7871f23a818ca0c097e2/Node.gitignore and further appended to
 # Logs
 logs
 *.log
@@ -57,3 +57,8 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# -- appended to original starting here
+
+# webpack dist files
+dist/
