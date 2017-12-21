@@ -9,24 +9,24 @@ fetch(
 
 function makeABarChart(json) {
   const data = json.data;
+  console.log(data.length);
 
   const margin = { top: 20, right: 20, bottom: 30, left: 40 },
-    width = 960 - margin.left - margin.right,
+    width = 1024 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-  const x = d3
-    .scaleBand()
-    .rangeRound([0, width], 0.1)
-    .paddingInner(0.1);
+  const parseTime = d3.timeParse("%Y-%m-%d");
 
+  data.forEach(d => {
+    d.date = parseTime(d[0]);
+    d.GDP = d[1];
+  });
+
+  const x = d3.scaleTime().range([0, width]);
   const y = d3.scaleLinear().range([height, 0]);
 
-  const xAxis = d3.axisBottom().scale(x);
-
-  const yAxis = d3
-    .axisLeft()
-    .scale(y)
-    .ticks(2000);
+  x.domain(d3.extent(data, d => d.date));
+  y.domain([0, d3.max(data, d => d.GDP)]);
 
   const svg = d3
     .select("body")
@@ -36,15 +36,19 @@ function makeABarChart(json) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  x.domain(data.map(d => d[0])); // e.g. d[0] === "1947-01-01"
-  y.domain([0, d3.max(data, d => d[1])]); // e.g. d[1] === 243.1
-
+  // Add the X Axis
+  const xAxis = d3.axisBottom(x).tickFormat(d3.timeFormat("%Y"));
   svg
     .append("g")
     .attr("class", "x axis")
-    .attr("transform", "translate(0,", +height + ")")
+    .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
 
+  // Add the Y Axis
+  const yAxis = d3
+    .axisLeft()
+    .scale(y)
+    .ticks(2000);
   svg
     .append("g")
     .attr("class", "y axis")
@@ -56,14 +60,25 @@ function makeABarChart(json) {
     .style("text-anchor", "end")
     .text("Gross Domestic Product, USA");
 
+  // Add the value line path
+  var valueLine = d3
+    .line()
+    .x(d => x(d.date))
+    .y(d => y(d.GDP));
   svg
-    .selectAll(".bar")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr("class", "bar")
-    .attr("x", d => x(d[0]))
-    .attr("width", x.bandwidth())
-    .attr("y", d => y(d[1]))
-    .attr("height", d => height - y(d[1]));
+    .append("path")
+    .data([data])
+    .attr("class", "line")
+    .attr("d", valueLine);
+
+  //   svg
+  //     .selectAll(".bar")
+  //     .data(data)
+  //     .enter()
+  //     .append("rect")
+  //     .attr("class", "bar")
+  //     .attr("x", d => x(d[0]))
+  //     .attr("width", x.bandwidth())
+  //     .attr("y", d => y(d[1]))
+  //     .attr("height", d => height - y(d[1]));
 }
