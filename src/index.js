@@ -22,11 +22,20 @@ function makeABarChart(json) {
     d.GDP = d[1];
   });
 
-  const x = d3.scaleTime().range([0, width]);
+  // the x scale is used only for building the x axis, not the bars
+  const x = d3.scaleTime().range([0, width - margin.left - margin.right]);
   const y = d3.scaleLinear().range([height, 0]);
 
   x.domain(d3.extent(data, d => d.date));
   y.domain([0, d3.max(data, d => d.GDP)]);
+
+  // the xBars scale is used to build the bars
+  const xBars = d3
+    .scaleBand()
+    .range([0, width - margin.left - margin.right])
+    .paddingInner(0.2);
+
+  xBars.domain(data.map(d => d.date));
 
   const svg = d3
     .select("body")
@@ -71,14 +80,15 @@ function makeABarChart(json) {
     .attr("class", "line")
     .attr("d", valueLine);
 
-  //   svg
-  //     .selectAll(".bar")
-  //     .data(data)
-  //     .enter()
-  //     .append("rect")
-  //     .attr("class", "bar")
-  //     .attr("x", d => x(d[0]))
-  //     .attr("width", x.bandwidth())
-  //     .attr("y", d => y(d[1]))
-  //     .attr("height", d => height - y(d[1]));
+  // Add the bars
+  svg
+    .selectAll(".bar")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("class", "bar")
+    .attr("x", d => xBars(d.date))
+    .attr("width", xBars.bandwidth())
+    .attr("y", d => y(d.GDP))
+    .attr("height", d => height - y(d.GDP));
 }
