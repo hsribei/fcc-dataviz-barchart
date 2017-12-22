@@ -8,7 +8,7 @@ body {
 }
 
 .bar:hover {
-  fill: brown;
+  fill: lightsteelblue;
 }
 
 .axis {
@@ -30,4 +30,21 @@ body {
   fill: none;
   stroke: steelblue;
   stroke-width: 2px;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: left;
+  padding: 0.5em;
+  font-size: 24px;
+  background: lightsteelblue;
+  color: black;
+  line-height: 1.5;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.gdp {
+  font-size: 15px;
 }

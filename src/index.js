@@ -9,10 +9,15 @@ function makeABarChart(json) {
     width = 1024 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-  const parseTime = d3.timeParse("%Y-%m-%d");
+  const parseDate = d3.timeParse("%Y-%m-%d");
+  function formatDate(date) {
+    let str = d3.timeFormat("%Y - %B")(date) + " (Q";
+    str += ((date.getMonth() + 3) / 3).toString() + ")";
+    return str;
+  }
 
   data.forEach(d => {
-    d.date = parseTime(d[0]);
+    d.date = parseDate(d[0]);
     d.GDP = d[1];
   });
 
@@ -71,6 +76,13 @@ function makeABarChart(json) {
     .attr("class", "line")
     .attr("d", valueLine);
 
+  // Define the div for the tooltip
+  var div = d3
+    .select("body")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
   // Add the bars
   svg
     .selectAll(".bar")
@@ -81,7 +93,27 @@ function makeABarChart(json) {
     .attr("x", d => xBars(d.date))
     .attr("width", xBars.bandwidth())
     .attr("y", d => y(d.GDP))
-    .attr("height", d => height - y(d.GDP));
+    .attr("height", d => height - y(d.GDP))
+    .on("mouseover", d => {
+      div
+        .transition()
+        .duration(200)
+        .style("opacity", 0.95);
+      div
+        .html(
+          d.GDP.toLocaleString(undefined, {
+            style: "currency",
+            currency: "USD"
+          }) +
+            " Billion" +
+            "<br />" +
+            '<span class="gdp">' +
+            formatDate(d.date) +
+            "</span>"
+        )
+        .style("left", d3.event.pageX + "px")
+        .style("top", d3.event.pageY + "px");
+    });
 }
 
 // FIXME: adding json here to avoid http request every time I make a change and want to preview it. Later replace it back with the `fetch()` call.
