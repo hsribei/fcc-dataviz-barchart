@@ -60,5 +60,5 @@ typings/
 
 # -- appended to original starting here
 
-# webpack dist files
-dist/
+# webpack bundle
+dist/bundle.js
