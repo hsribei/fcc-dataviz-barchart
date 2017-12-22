@@ -11,6 +11,7 @@
     "@babel/preset-env": "^7.0.0-beta.35",
     "babel-loader": "^8.0.0-beta.0",
     "css-loader": "^0.28.7",
+    "gh-pages": "^1.1.0",
     "style-loader": "^0.19.1",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.9.7"
@@ -18,7 +19,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "start": "webpack-dev-server --open"
+    "start": "webpack-dev-server --open",
+    "deploy": "gh-pages -d dist"
   },
   "author": "",
   "license": "ISC"
