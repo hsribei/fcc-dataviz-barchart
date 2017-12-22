@@ -5,8 +5,8 @@ function makeABarChart(json) {
   const data = json.data;
   console.log(data.length);
 
-  const margin = { top: 20, right: 20, bottom: 30, left: 40 },
-    width = 1024 - margin.left - margin.right,
+  const margin = { top: 20, right: 20, bottom: 20, left: 20 },
+    width = 800 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
   const parseDate = d3.timeParse("%Y-%m-%d");
@@ -22,7 +22,7 @@ function makeABarChart(json) {
   });
 
   // the x scale is used only for building the x axis, not the bars
-  const x = d3.scaleTime().range([0, width - margin.left - margin.right]);
+  const x = d3.scaleTime().range([0, width]);
   const y = d3.scaleLinear().range([height, 0]);
 
   x.domain(d3.extent(data, d => d.date));
@@ -31,13 +31,13 @@ function makeABarChart(json) {
   // the xBars scale is used to build the bars
   const xBars = d3
     .scaleBand()
-    .range([0, width - margin.left - margin.right])
+    .range([0, width])
     .paddingInner(0.2);
 
   xBars.domain(data.map(d => d.date));
 
   const svg = d3
-    .select("body")
+    .select("div#d3")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -422,4 +422,6 @@ const json = {
   ]
 };
 
-makeABarChart(json);
+document.addEventListener("DOMContentLoaded", () => {
+  makeABarChart(json);
+});

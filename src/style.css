@@ -48,3 +48,13 @@ div.tooltip {
 .gdp {
   font-size: 15px;
 }
+
+.centered {
+  height: 90vh;
+  display: flex;
+  justify-content: center; /* center horizontally */
+  align-items: center; /* center vertically */
+}
+
+#d3 {
+}
