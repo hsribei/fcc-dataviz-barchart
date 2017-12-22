@@ -15,15 +15,15 @@ body {
   font: 10px sans-serif;
 }
 
+.axis text {
+  fill: white;
+}
+
 .axis path,
 .axis line {
   fill: none;
-  stroke: #000;
+  stroke: white;
   shape-rendering: crispEdges;
-}
-
-.x.axis path {
-  display: none;
 }
 
 .line {
