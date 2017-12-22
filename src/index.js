@@ -48,10 +48,7 @@ function makeABarChart(json) {
     .call(xAxis);
 
   // Add the Y Axis
-  const yAxis = d3
-    .axisLeft()
-    .scale(y)
-    .ticks(2000);
+  const yAxis = d3.axisLeft().scale(y);
   svg
     .append("g")
     .attr("class", "y axis")
